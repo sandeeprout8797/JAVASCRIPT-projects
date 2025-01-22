@@ -47,12 +47,12 @@
   </head>
   <body>
     <div class="div-class">
-      <button class="toss-button" onclick="toss()"> <img class="coin-image" src="coin tossing game /coin-image.png"> </button>
+      <button class="toss-button"> <img class="coin-image" src="coin tossing game /coin-image.png"> </button>
       <h1 class="toss-result"> result: </h1>
       <h3 class="score-display"> score.head || score.tail </h3>
     </div>
     <div class="reset-div">
-      <button class="reset-scores" onclick="reset()"> reset </button>
+      <button class="reset-scores"> reset </button>
     </div>
 
     <script>
@@ -99,6 +99,9 @@
         localStorage.removeItem('.score')
         updateScore();
       }
+
+      document.querySelector('.toss-button').addEventListener('click', toss);
+      document.querySelector('.reset-scores').addEventListener('click', reset);
       
     </script>
   </body>
