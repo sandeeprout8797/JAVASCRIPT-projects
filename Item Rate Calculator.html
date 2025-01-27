@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>
-            fare calculator 
+            rate calculator 2
         </title>
         <style>
             body {
@@ -74,7 +74,7 @@
 
         <h3 class="displayOne"> Item Name: [Quantity X Rate = Amount] </h3>
         <h2 class="displayTwo"></h2>
-        <h1 class="displayTotal">Total Rs.0</h1>
+        <h1 class="displayTotal"></h1>
     </body>
 
     <script>
@@ -90,14 +90,6 @@
                 deleteItem(event);
             }
         });
-
-        window.onload = function() {
-            const savedItems = JSON.parse(localStorage.getItem('itemArray'));
-            if (savedItems && savedItems.length > 0) {
-                itemArray = savedItems;
-                render();
-            }
-        };
         
         render();
 
@@ -124,7 +116,6 @@
 
             document.querySelector('.displayTwo').innerHTML = newItem;
             document.querySelector('.displayTotal').innerHTML = `Total Rs.${totalPrice}`;
-            localStorage.setItem('itemArray', JSON.stringify(itemArray));
 
         }
 
