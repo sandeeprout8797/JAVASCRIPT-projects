@@ -2,158 +2,157 @@
 <html>
     <head>
         <title>
-            Task list
+            To do list 
         </title>
         <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f9;
+                color: #333;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                flex-direction: column;
+            }
+    
             h1 {
-                font-size: 40px;
-                color: red;
+                color: #4CAF50;
+            }
+    
+            .todo-container {
+                background-color: white;
+                width: 400px;
+                padding: 20px;
+                padding-right: 40px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 text-align: center;
+                margin-top: 20px;
             }
-            .inputDiv {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
+    
+            .todo-container input {
+                width: 100%;
+                padding: 10px;
+                margin: 10px 0;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 16px;
             }
-            .inputDiv input {
-                height: 35px;
-                width: 300px;
-                margin-bottom: 20px;
-                border: 5px lightgray solid;
-                border-radius: 9px;
-            }
-            .buttonDiv {
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-            }
-            .buttonDiv button {
-                background-color: red;
-                color: white;
-                border: 1px white solid;
-                border-radius: 5px;
-                height: 40px;
-                width: 100px;
-            }
-            .buttonDiv button:hover {
-                background-color: rgb(255, 121, 121);
-                cursor: pointer;
-            }
-            .displayTask {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-            .displayTask button {
-                background-color: rgb(200, 0, 0);
+    
+            .todo-container button {
+                width: 100%;
+                padding: 10px;
+                background-color: #4CAF50;
                 color: white;
                 border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s;
             }
-            .pDisplay {
+    
+            .todo-container button:hover {
+                background-color: #45a049;
+            }
+    
+            .todo-list {
+                margin-top: 20px;
+                text-align: left;
+                padding-left: 20px;
+            }
+    
+            .todo-list p {
+                background-color: #f9f9f9;
+                border-radius: 4px;
+                padding: 10px;
+                margin: 5px 0;
                 display: flex;
-                flex-direction: row;
                 justify-content: space-between;
-                width: 900px;
-                background-color: rgb(239, 157, 157);
+                align-items: center;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
+    
+            .todo-list button {
+                background-color: #f44336;
+                width: 100px;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+    
+            .todo-list button:hover {
+                background-color: #d32f2f;
+            }
+    
+            .input-element, .date-element {
+                margin-bottom: 10px;
+            }
+    
         </style>
     </head>
     <body>
-        <h1>To Do TASK List</h1>
-        <div class="inputDiv">
-            <input class="taskName" placeholder=" enter the task here">
-            <input class="timeElement" type="time">
-            <input class="dateElement" type="date">
+        <h1>To Do list</h1>
+        <div class="todo-container">
+
+            <input class="input-element" placeholder="enter the task here">
+
+            <input class="date-element" type="date">
+
+            <button onclick="
+                add()">
+                Add 
+            </button>
+
+            <div class="todo-list">
+
+            </div>
+
         </div>
-        <div class="buttonDiv">
-            <button class="addButton"> ADD </button>
-            <button class="resetButton"> Reset </button>
-        </div>
-        <h2 class="displayTask"></h2>
 
         <script>
-            let taskArray = [];
-
-            document.querySelector('.addButton').addEventListener('click', add);
-            document.querySelector('.resetButton').addEventListener('click', resetTask);
-
-            window.onload = function() {
-                const saveItem = localStorage.getItem('newtaskArray');
-                if (saveItem) {
-                    taskArray = JSON.parse(saveItem);
-                }
-                render();
-            }
+            
+            const todoList = [];
+            
+            render ()
 
             function render() {
-                let newtaskArray = '';
+                let todoHTML = '';
 
-                if (taskArray.length === 0) {
-                    document.querySelector('.displayTask').innerHTML = 'No tasks to display.';
-                    return;
+                for ( i = 0; i < todoList.length; i++) {
+                    const todoObject = todoList[i];
+                    const {name, dueDate} = todoObject;
+                    const html = `<p> ${name} ${dueDate} <button onclick="
+                                                        todoList.splice(${i}, 1)
+                                                        render()">
+                                                    Delete
+                                                 </button> </p>`
+                    todoHTML += html;
                 }
-
-                for (let i = 0; i < taskArray.length; i++) {
-                const { task, time, date, done } = taskArray[i];
-                newtaskArray += `<p class="pDisplay"> 
-                                    <input class="checkBox" type="checkbox" data-index="${i}" ${done ? 'checked' : ''}> 
-                                    Task: ${task} || Time: ${time} || Date: ${date} 
-                                    <button class="deleteButton" data-index="${i}">Delete</button>
-                                  </p>`;
-                }
-
-                document.querySelector('.displayTask').innerHTML = newtaskArray;
-                document.querySelectorAll('.deleteButton').forEach((button) => {
-                    button.addEventListener('click', deleteTask);
-                });
-                document.querySelectorAll('.checkBox').forEach((checkbox) => {
-                    checkbox.addEventListener('change', toggle);
-                })
-                localStorage.setItem('newtaskArray', JSON.stringify(taskArray));
+                document.querySelector('.todo-list').innerHTML = todoHTML;
             }
 
             function add() {
-                const taskInput = document.querySelector('.taskName');
-                const task = taskInput.value;
-                const timeInput = document.querySelector('.timeElement');
-                const time = timeInput.value;
-                const dateInput = document.querySelector('.dateElement');
-                const date = dateInput.value;
+                const inputElement = document.querySelector('.input-element');
+                const task = inputElement.value;
 
-                taskArray.push({
-                    task: task,
-                    time: time,
-                    date: date,
-                    done: false
-                })
+                const dateElement = document.querySelector('.date-element');
+                const date = dateElement.value;
 
-                clearInputs();
-                render();
-            }
+                todoList.push({
+                    name: task,
+                    dueDate: date,
+                });
 
-            function clearInputs() {
-                document.querySelector('.taskName').value = '';
-            }
+                inputElement.value = '';
+                dateElement.value = '';
 
-            function deleteTask(event) {
-                const index = event.target.getAttribute('data-index');
-                taskArray.splice(index, 1);
-                localStorage.removeItem('newtaskArray');
-                render();
-            }
-
-            function toggle() {
-                const index = event.target.getAttribute('data-index');
-                taskArray[index].done = event.target.checked;
-                render();
-            }
-
-            function resetTask() {
-                taskArray = [];
-                localStorage.removeItem('newtaskArray');
-                render();
+                render() 
             }
         </script>
     </body>
