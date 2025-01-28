@@ -144,7 +144,7 @@
                 render();
             }
 
-            function toggle() {
+            function toggle(event) {
                 const index = event.target.getAttribute('data-index');
                 taskArray[index].done = event.target.checked;
                 render();
