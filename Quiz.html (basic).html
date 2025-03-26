@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Quiz</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+            .inputDiv, .displayDiv {
+                margin-bottom: 20px;
+            }
+            .newQuestionCard {
+                border: 1px solid #000;
+                padding: 10px;
+                margin: 10px 0;
+                background-color: #f5f5f5;
+            }
+            .newQuizDisplayDiv {
+                display: flex;
+                justify-content: space-between;
+            }
+            .buttonAddDiv {
+                margin-top: 10px;
+            }
+            .buttonAddDiv button {
+                margin-right: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="inputDiv">
+            <input class="questionInput" type="text" placeholder="Enter the question here">
+            
+            <div class="optionDiv">
+                <input class="optionOne" type="text" placeholder="Option 1">
+                <button class="addButton">Add</button>
+
+                <input class="optionTwo" type="text" placeholder="Option 2">
+                <button class="addButton">Add</button>
+
+                <input class="optionThree" type="text" placeholder="Option 3">
+                <button class="addButton">Add</button>
+
+                <input class="optionFour" type="text" placeholder="Option 4">
+                <button class="addButton">Add</button>
+            </div>
+
+            <div class="answerDiv">
+                <input class="answerInput" type="text" placeholder="Answer here">
+                <button class="addButton">Add</button>
+            </div>
+        </div>
+
+        <button class="submitButton">Submit</button>
+
+        <div class="displayDiv"></div>
+
+        <script>
+            let singleQuestion = [];
+    
+            document.querySelector('.submitButton').addEventListener('click', submit);
+    
+            function render() {
+                const displayDiv = document.querySelector('.displayDiv');
+                displayDiv.innerHTML = "";
+    
+                singleQuestion.forEach((question, index) => {
+                    const newQuestion = document.createElement('div');
+                    newQuestion.classList.add('newQuestionCard');
+                    newQuestion.setAttribute('data-index', index);
+                    newQuestion.innerHTML = `
+                    <div class="newQuizDisplayDiv">
+                        <div class="newQuestionCardDiv">
+                            <h3><strong>Question ${index + 1}: ${question.question}</strong></h3>
+                            <p><strong>Option 1:</strong> ${question.optionOne}</p>
+                            <p><strong>Option 2:</strong> ${question.optionTwo}</p>
+                            <p><strong>Option 3:</strong> ${question.optionThree}</p>
+                            <p><strong>Option 4:</strong> ${question.optionFour}</p>
+                        </div>
+                        <div class="answerDiv" style="display:none;">
+                            <strong>Answer: </strong>${question.answer}
+                        </div>
+                        <div class="buttonAddDiv">
+                            <button class="editQuestion" data-index="${index}">Edit</button>
+                            <button class="showAnswer" data-index="${index}">Show Answer</button>
+                            <button class="deleteButton" data-index="${index}">Delete</button>
+                        </div>
+                    </div>
+                    `;
+                    displayDiv.appendChild(newQuestion);
+                });
+    
+                addEventListeners();
+            }
+    
+            function addEventListeners() {
+                document.querySelectorAll('.showAnswer').forEach(button => {
+                    button.addEventListener('click', toggleAnswer);
+                });
+    
+                document.querySelectorAll('.deleteButton').forEach(button => {
+                    button.addEventListener('click', deleteQuestion);
+                });
+            }
+    
+            function toggleAnswer(event) {
+                const index = event.target.getAttribute('data-index');
+                const questionCard = document.querySelector(`.newQuestionCard[data-index="${index}"]`);
+                const answerDiv = questionCard.querySelector('.answerDiv');
+                const isVisible = answerDiv.style.display === 'block';
+                answerDiv.style.display = isVisible ? 'none' : 'block';
+                event.target.textContent = isVisible ? 'Show Answer' : 'Hide Answer';
+            }
+    
+            function deleteQuestion(event) {
+                const index = event.target.getAttribute('data-index');
+                singleQuestion.splice(index, 1);
+                render();
+            }
+    
+            function submit() {
+                const questionInput = document.querySelector('.questionInput');
+                const optionOne = document.querySelector('.optionOne');
+                const optionTwo = document.querySelector('.optionTwo');
+                const optionThree = document.querySelector('.optionThree');
+                const optionFour = document.querySelector('.optionFour');
+                const answerInput = document.querySelector('.answerInput');
+    
+                const question = questionInput.value.trim();
+                const optnOne = optionOne.value.trim();
+                const optnTwo = optionTwo.value.trim();
+                const optnThree = optionThree.value.trim();
+                const optnFour = optionFour.value.trim();
+                const answer = answerInput.value.trim();
+    
+                if (question && optnOne && optnTwo && optnThree && optnFour && answer) {
+                    singleQuestion.push({
+                        question: question,
+                        optionOne: optnOne,
+                        optionTwo: optnTwo,
+                        optionThree: optnThree,
+                        optionFour: optnFour,
+                        answer: answer
+                    });
+    
+                    clearInputs();
+                    render();
+                } else {
+                    alert("Please enter valid inputs for all fields.");
+                }
+            }
+    
+            function clearInputs() {
+                document.querySelector('.questionInput').value = '';
+                document.querySelector('.optionOne').value = '';
+                document.querySelector('.optionTwo').value = '';
+                document.querySelector('.optionThree').value = '';
+                document.querySelector('.optionFour').value = '';
+                document.querySelector('.answerInput').value = '';
+            }
+        </script>
+    </body>
+</html>
